@@ -1,0 +1,33 @@
+services:
+  logserver:
+    build: .
+    container_name: aist-log
+    ports:
+      - "${PORT:-3100}:3100"
+    volumes:
+      # Shared logs directory with AISmartTalk (read-only)
+      - ../aismarttalk/logs:/app/logs:ro
+      # Persistent SQLite storage
+      - logserver-data:/data
+    environment:
+      - PORT=3100
+      - NODE_ENV=production
+      - SQLITE_PATH=/data/logserver.db
+      - LOG_FILE_PATH=/app/logs/structured.log
+      - API_KEYS=${LOGSERVER_API_KEYS:-change-me}
+      - OPENAI_API_KEY=${OPENAI_API_KEY:-}
+      - AI_MODEL=${AI_MODEL:-gpt-4o-mini}
+      - CORS_ORIGINS=${CORS_ORIGINS:-*}
+      - RETENTION_DAYS=${RETENTION_DAYS:-30}
+      - KUMA_API_URL=${KUMA_API_URL:-}
+      - KUMA_API_KEY=${KUMA_API_KEY:-}
+    restart: always
+    healthcheck:
+      test: ["CMD", "wget", "-qO-", "http://localhost:3100/api/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
+
+volumes:
+  logserver-data:
