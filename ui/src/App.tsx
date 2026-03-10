@@ -9,6 +9,7 @@ import {
 import {
   FaMoon, FaSun, FaSignOutAlt, FaDatabase, FaKey, FaArrowRight,
   FaPlus, FaTrash, FaRedo, FaCopy, FaLayerGroup, FaCircle, FaCog,
+  FaHeart,
 } from 'react-icons/fa';
 import { useApiKey } from './hooks/useApiKey';
 import LogsViewer from './pages/LogsViewer';
@@ -26,6 +27,25 @@ interface ProjectInfo {
   auditCount: number;
   requestCount: number;
   lastActivity: string | null;
+}
+
+// ---------------------------------------------------------------------------
+// Footer
+// ---------------------------------------------------------------------------
+
+function MadeWithLove() {
+  const mutedText = useColorModeValue('gray.400', 'gray.600');
+  return (
+    <HStack spacing={1.5} justify="center" py={4}>
+      <Text fontSize="xs" color={mutedText}>Made with</Text>
+      <Icon as={FaHeart} w={2.5} h={2.5} color="red.400" />
+      <Text fontSize="xs" color={mutedText}>by</Text>
+      <Text as="a" href="https://aismarttalk.com" target="_blank" rel="noopener noreferrer"
+        fontSize="xs" color={mutedText} fontWeight="600" _hover={{ color: 'brand.400' }} transition="color 0.2s">
+        AI SmartTalk
+      </Text>
+    </HStack>
+  );
 }
 
 // ---------------------------------------------------------------------------
@@ -84,6 +104,7 @@ function LoginScreen({ onLogin }: { onLogin: (key: string) => void }) {
           </Button>
         </VStack>
       </Box>
+      <MadeWithLove />
     </Flex>
   );
 }
@@ -411,6 +432,7 @@ export default function App() {
           <LogsViewer apiKey={apiKey} projectId={selectedProject} />
         </Box>
       )}
+      <MadeWithLove />
     </Box>
   );
 }
